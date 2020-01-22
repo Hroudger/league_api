@@ -1,1 +1,36 @@
-./.idea
+# git ignore file
+# idea folders
+.idea/*
+!.idea/encodings.xml
+!.idea/runConfigurations
+*/.idea/*
+!*/.idea/encodings.xml
+!*/.idea/runConfigurations
+atlassian-ide-plugin.xml
+
+# conf folders
+conf/ide
+*/conf/ide
+
+.gradle
+*/.gradle
+
+*/local.properties
+
+# general excludes
+node_modules
+yarn-error.log
+tmp
+out
+target
+overlays
+build
+classes
+failsafe-reports
+*.swp
+*.iml
+*.bak
+.DS_Store
+
+# browser version management exclude
+*BrowserVersionManagement.json
