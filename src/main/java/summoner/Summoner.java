@@ -34,7 +34,7 @@ public class Summoner {
     }
 
     public void loadMatchHistory() throws SQLException {
-        matchHistory.loadHistory();
+//        matchHistory.loadHistory();
     }
 
     public int getWinRate(String queue) {

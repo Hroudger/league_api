@@ -9,27 +9,28 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountSelector extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private DefaultListModel<Summoner> summonerDefaultListModel;
+    private final DefaultListModel<String> summonerDefaultListModel;
 
-    private JList<Summoner> summonerSelectionList;
+    private JList<String> summonerSelectionList;
     private JTextField userNameInput;
-    private JButton confirmName;
     private JComboBox<Region> regionSelection;
 
-    public AccountSelector(List<Summoner> summonersList) {
+    public AccountSelector(List<String> summonersList) {
         setBounds(100, 100, 600, 600);
         setLocation(100, 100);
         setLayout(null);
         setForeground(Color.BLUE);
         setBackground(Color.BLUE);
         summonerDefaultListModel = new DefaultListModel<>();
-        summonerDefaultListModel.insertElementAt(new Summoner(), 0);
+        summonerDefaultListModel.insertElementAt("DerMalko", 0);
         for (int i = 0; i < summonersList.size(); i++) {
             summonerDefaultListModel.insertElementAt(summonersList.get(i), i);
         }
@@ -38,7 +39,23 @@ public class AccountSelector extends JFrame {
         initalizeNameInput();
         initalizeConfirmButton();
         initalizeRegionSelection();
+        addCloseSettings();
+        addSelectionListener();
         setVisible(true);
+        while (3 == 3) {
+
+        }
+    }
+
+    private void addSelectionListener() {
+        summonerSelectionList.addListSelectionListener(listSelectionEvent -> {
+            if (listSelectionEvent.getValueIsAdjusting()) {
+                new OverviewFrame(this, listSelectionEvent.getSource().toString());
+            }
+        });
+    }
+
+    private void addCloseSettings() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -52,15 +69,12 @@ public class AccountSelector extends JFrame {
                 }
             }
         });
-        int i = 3;
-        while (i == 3) {
-
-        }
     }
 
     private void initalizeRegionSelection() {
-        final Region[] regionArray = new Region[1];
+        final Region[] regionArray = new Region[2];
         regionArray[0] = Region.EUW;
+        regionArray[1] = Region.NA;
         final ComboBoxModel<Region> comboBoxModel = new DefaultComboBoxModel<>(regionArray);
         comboBoxModel.setSelectedItem(Region.EUW);
         regionSelection = new JComboBox<>(comboBoxModel);
@@ -70,20 +84,60 @@ public class AccountSelector extends JFrame {
     }
 
     private void initalizeConfirmButton() {
-        confirmName = new JButton("Bestätigen");
+        final JButton confirmName = new JButton("Bestätigen");
         confirmName.setBounds(450, 450, 100, 100);
         add(confirmName);
         confirmName.setVisible(true);
         confirmName.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!userNameInput.getText().isEmpty()) {
-                    //TODO add summoner name and region here
-                    summonerDefaultListModel.addElement(new Summoner());
+                final String name = userNameInput.getText();
+                if (!name.isEmpty()) {
+                    if (isNameAlreadySaved(name)) {
+                        userNameInput.setText("");
+                        return;
+                    }
+                    try {
+                        Summoner.addSummoner(userNameInput.getText(), Objects.requireNonNull(regionSelection.getSelectedItem()).toString());
+                    }
+                    catch (IOException | NullPointerException ex) {
+                        openNewErrorWindow(name, (Region) Objects.requireNonNull(regionSelection.getSelectedItem()));
+                    }
+                    final String region = "    ";
+                    final StringBuilder sb = new StringBuilder(region);
+                    final String regionUnprepared = regionSelection.getSelectedItem().toString();
+                    for (int i = 0; i < regionUnprepared.toCharArray().length; i++) {
+                        sb.setCharAt(i, regionUnprepared.toCharArray()[i]);
+                    }
+                    summonerDefaultListModel.addElement(sb.toString() + " " + userNameInput.getText());
                     userNameInput.setText("");
                 }
             }
         });
+    }
+
+    private static void openNewErrorWindow(String input, Region region) {
+        final JFrame errorWindow = new JFrame("Beschwörername existiert nicht!");
+        errorWindow.setBounds(300, 300, 300, 300);
+        final JLabel label = new JLabel(input + " ist kein existiertender Beschwörer für den Server:" + region.toString());
+        errorWindow.add(label);
+        label.setBounds(100, 100, 200, 100);
+        label.setVisible(true);
+        errorWindow.setVisible(true);
+    }
+
+    private boolean isNameAlreadySaved(String name) {
+        for (int i = 0; i < summonerDefaultListModel.getSize(); i++) {
+            final String data = summonerDefaultListModel.get(i);
+            final String savedName = data.substring(5).trim();
+            if (savedName.equals(name)) {
+                final String region = data.substring(0, 5).trim();
+                if (region.equals(Objects.requireNonNull(regionSelection.getSelectedItem()).toString())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void initalizeNameInput() {
