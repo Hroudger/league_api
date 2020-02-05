@@ -1,6 +1,7 @@
 package summoner;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Summoner {
 
@@ -10,6 +11,12 @@ public class Summoner {
     private String region;
 
 
+    public Summoner(String id, String name, String region) {
+        this.id = id;
+        this.name = name;
+        this.region = region;
+    }
+
     public static void addSummoner(String name, String region) throws IOException {
         String[] cmd = {
                 "python",
@@ -18,6 +25,10 @@ public class Summoner {
                 region
         };
         Runtime.getRuntime().exec(cmd);
+    }
+
+    public void loadMatchHistory() throws SQLException {
+        matchHistory.loadHistory();
     }
 
     public int getWinRate(String queue) {
@@ -45,4 +56,11 @@ public class Summoner {
     }
 
 
+    public String getName() {
+        return name;
+    }
+
+    public String getRegion() {
+        return region;
+    }
 }
