@@ -6,11 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class OverviewFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private final Summoner summoner;
+    private Summoner summoner;
     private final AccountSelector accountSelector;
 
     private JPanel openedPanel;
@@ -26,9 +27,14 @@ public class OverviewFrame extends JFrame {
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setLayout(null);
         addMenuItem();
-        summoner = new Summoner("dsad", "DarkBlace", "EUW");
+        try {
+            summoner = new Summoner("dsad", "DarkBlace", "EUW");
+            openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+        }
+        catch (SQLException e) {
+            e.getStackTrace();
+        }
 //        summoner = loadSummoner(summonerName);
-        openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
         OverviewFrame.this.add(openedPanel);
         openedPanel.setBounds(0, 0, getWidth(), getHeight());
         openedPanel.setVisible(true);
@@ -41,11 +47,13 @@ public class OverviewFrame extends JFrame {
         champ.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                OverviewFrame.this.remove(openedPanel);
+                OverviewFrame.this.getContentPane().removeAll();
                 openedPanel = new ChampionPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
                 OverviewFrame.this.remove(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
+                setVisible(false);
+                setVisible(true);
             }
 
             @Override
@@ -57,11 +65,13 @@ public class OverviewFrame extends JFrame {
         games.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                OverviewFrame.this.remove(openedPanel);
+                OverviewFrame.this.getContentPane().removeAll();
                 openedPanel = new GamesPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
                 OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
+                setVisible(false);
+                setVisible(true);
             }
 
             @Override
@@ -73,11 +83,13 @@ public class OverviewFrame extends JFrame {
         elo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                OverviewFrame.this.remove(openedPanel);
+                OverviewFrame.this.getContentPane().removeAll();
                 openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
                 OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
+                setVisible(false);
+                setVisible(true);
             }
 
             @Override

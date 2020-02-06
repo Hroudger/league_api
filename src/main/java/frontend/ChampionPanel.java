@@ -1,5 +1,7 @@
 package frontend;
 
+import champion.Champion;
+import champion.KDA;
 import summoner.Summoner;
 
 import javax.swing.*;
@@ -7,7 +9,8 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import java.awt.*;
+import java.util.List;
 
 public class ChampionPanel extends JPanel {
 
@@ -15,8 +18,11 @@ public class ChampionPanel extends JPanel {
     private final List<Champion> championList;
 
     public ChampionPanel(boolean rankedState, boolean normalState, boolean aramState, Summoner summoner) {
-        championList = summoner.getPlayedChampion(rankedState, normalState, aramState);
+        championList = summoner.getChampionList();
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         addChampionList();
+        setVisible(true);
     }
 
     private void addChampionList() {
@@ -29,25 +35,25 @@ public class ChampionPanel extends JPanel {
         addColumnHeader(columnModel, "KD/A");
         addColumnHeader(columnModel, "Durchschnittliche Spieldauer");
         addColumnHeader(columnModel, "CS");
-        final TableModel<Champion> championTableModel = new DefaultTableModel();
-        for (int i = 0; i < championList.size(); i++) {
-            final Champion champion = championList.get(i);
-            championTableModel.setValueAt(champion.getName(), 0, i);
-            championTableModel.setValueAt(champion.getGamesAmount(), 1, i);
-            championTableModel.setValueAt(champion.getGamesPercentage(), 2, i);
-            championTableModel.setValueAt(champion.getWinRate(), 3, i);
-            final KDA kda = champion.getKDA();
+        final DefaultTableModel championTableModel = new DefaultTableModel();
+        for (final Champion champion : championList) {
+            championTableModel.addColumn(champion.getName());
+            championTableModel.addColumn(champion.getAmountGames());
+            championTableModel.addColumn(champion.getPercentGames());
+            championTableModel.addColumn(champion.getWinrate());
+            final KDA kda = champion.getKda();
             final String kdaFormatted = kda.getKills() + " / " + kda.getDeaths() + " / " + kda.getAssists();
-            championTableModel.setValueAt(kdaFormatted, 4, i);
-            championTableModel.setValueAt(champion.getAverageGameLength(), 5, i);
-            championTableModel.setValueAt(champion.getCSPerMinute(), 6, i);
+            championTableModel.addColumn(kdaFormatted);
+            championTableModel.addColumn(champion.getAvgGameLength());
+            championTableModel.addColumn(champion.getCsMin());
         }
-        final JTable<Champion> championOverviewTable = new JTable(championTableModel, columnModel);
+        final JTable championOverviewTable = new JTable(championTableModel, columnModel);
+        championOverviewTable.getTableHeader().setReorderingAllowed(false);
         championOverviewTable.setBounds(0, 0, getWidth(), getHeight());
         championOverviewTable.setColumnSelectionAllowed(false);
         championOverviewTable.setRowSelectionAllowed(false);
-        add(championOverviewTable);
         championOverviewTable.setVisible(true);
+        add(championOverviewTable);
     }
 
     private static void addColumnHeader(TableColumnModel columnModel, String headerName) {

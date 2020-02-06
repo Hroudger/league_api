@@ -17,6 +17,7 @@ public class AccountSelector extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private final DefaultListModel<String> summonerDefaultListModel;
+    private final JPanel panel;
 
     private JList<String> summonerSelectionList;
     private JTextField userNameInput;
@@ -26,6 +27,8 @@ public class AccountSelector extends JFrame {
         setBounds(100, 100, 600, 600);
         setLocation(100, 100);
         setLayout(null);
+        panel = new JPanel();
+        panel.setBounds(0, 0, getWidth(), getHeight());
         summonerDefaultListModel = new DefaultListModel<>();
         summonerDefaultListModel.insertElementAt("DerMalko", 0);
         for (int i = 0; i < summonersList.size(); i++) {
@@ -38,6 +41,9 @@ public class AccountSelector extends JFrame {
         initalizeRegionSelection();
         addCloseSettings();
         addSelectionListener();
+        panel.setLayout(null);
+        panel.setVisible(true);
+        add(panel);
         setVisible(true);
         while (3 == 3) {
 
@@ -76,14 +82,14 @@ public class AccountSelector extends JFrame {
         comboBoxModel.setSelectedItem(Region.EUW);
         regionSelection = new JComboBox<>(comboBoxModel);
         regionSelection.setBounds(350, 450, 100, 100);
-        add(regionSelection);
+        panel.add(regionSelection);
         regionSelection.setVisible(true);
     }
 
     private void initalizeConfirmButton() {
         final JButton confirmName = new JButton("Bestätigen");
         confirmName.setBounds(450, 450, 100, 100);
-        add(confirmName);
+        panel.add(confirmName);
         confirmName.setVisible(true);
         confirmName.addMouseListener(new MouseAdapter() {
             @Override
@@ -145,7 +151,7 @@ public class AccountSelector extends JFrame {
     private void initalizeNameInput() {
         userNameInput = new JTextField();
         userNameInput.setBounds(50, 450, 300, 100);
-        add(userNameInput);
+        panel.add(userNameInput);
         userNameInput.setVisible(true);
     }
 
@@ -154,7 +160,9 @@ public class AccountSelector extends JFrame {
         summonerSelectionList.setBounds(50, 50, 500, 300);
         summonerSelectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         summonerSelectionList.setLayoutOrientation(JList.VERTICAL);
-        add(summonerSelectionList);
-        summonerSelectionList.setVisible(true);
+//        final JScrollPane scrollPane = new JScrollPane();
+//        scrollPane.setViewportView(summonerSelectionList);
+//        panel.add(scrollPane);
+        panel.add(summonerSelectionList);
     }
 }

@@ -56,7 +56,7 @@ public class EloPanel extends JPanel {
                 break;
         }
         final ImageIcon eloIcon = new ImageIcon("files/" + elo);
-        final JLabel iconLabel = new JLabel(summoner.getLP() + "LP", eloIcon, SwingConstants.CENTER);
+        final JLabel iconLabel = new JLabel(summoner.getLp() + "LP", eloIcon, SwingConstants.CENTER);
         add(iconLabel);
         iconLabel.setBounds(50, 250, 300, 300);
         iconLabel.setVisible(true);
