@@ -3,7 +3,10 @@ package frontend;
 import summoner.Summoner;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class ChampionPanel extends JPanel {
@@ -17,15 +20,15 @@ public class ChampionPanel extends JPanel {
     }
 
     private void addChampionList() {
-        final String[] columnNames = {
-            "Champion",
-            "Gesamte Spiele",
-            "% Anteil Spiele",
-            "Winrate",
-            "KD/A",
-            "Durchschnittliche Spieldauer",
-            "CS/min"
-        };
+
+        final TableColumnModel columnModel = new DefaultTableColumnModel();
+        addColumnHeader(columnModel, "Champion");
+        addColumnHeader(columnModel, "Gesamte Spiele");
+        addColumnHeader(columnModel, "% Anteil Spiele");
+        addColumnHeader(columnModel, "Winrate");
+        addColumnHeader(columnModel, "KD/A");
+        addColumnHeader(columnModel, "Durchschnittliche Spieldauer");
+        addColumnHeader(columnModel, "CS");
         final TableModel<Champion> championTableModel = new DefaultTableModel();
         for (int i = 0; i < championList.size(); i++) {
             final Champion champion = championList.get(i);
@@ -39,11 +42,17 @@ public class ChampionPanel extends JPanel {
             championTableModel.setValueAt(champion.getAverageGameLength(), 5, i);
             championTableModel.setValueAt(champion.getCSPerMinute(), 6, i);
         }
-        final JTable<Champion> championOverviewTable = new JTable(, columnNames);
+        final JTable<Champion> championOverviewTable = new JTable(championTableModel, columnModel);
         championOverviewTable.setBounds(0, 0, getWidth(), getHeight());
         championOverviewTable.setColumnSelectionAllowed(false);
         championOverviewTable.setRowSelectionAllowed(false);
         add(championOverviewTable);
         championOverviewTable.setVisible(true);
+    }
+
+    private static void addColumnHeader(TableColumnModel columnModel, String headerName) {
+        final TableColumn tableColumn = new TableColumn();
+        tableColumn.setHeaderValue(headerName);
+        columnModel.addColumn(tableColumn);
     }
 }
