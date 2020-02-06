@@ -2,7 +2,7 @@ from riotwatcher import RiotWatcher, ApiError
 import mysql.connector as sql
 from mysql.connector import Error
 
-watcher = RiotWatcher("RGAPI-67ba4d09-55d7-43e6-9de3-09d42a813533")
+watcher = RiotWatcher("RGAPI-d2187d57-f8c1-43fc-860a-ffbf466bd351")
 
 
 def connect(query, status):
@@ -39,8 +39,8 @@ def connect(query, status):
 def getSummoner(region, name):
     try:
         summoner = watcher.summoner.by_name(region, name)
-        query = "INSERT INTO summoners (id, REGION, NAME) VALUES ('{}', '{}', '{}')"\
-                .format(summoner["accountId"], region, summoner["name"])
+        query = "INSERT IGNORE INTO summoners (id, REGION, NAME) VALUES ('{}', '{}', '{}') ON DUPLICATE KEY UPDATE" \
+            .format(summoner["accountId"], region, summoner["name"])
         connect(query, "insert")
     except ApiError as err:
         if err.response.status_code == 429:
@@ -52,34 +52,39 @@ def getSummoner(region, name):
 
 
 def getMatchHistory(region, name):
-    query = 'SELECT id FROM summoners WHERE NAME = {}'.format(name)
+    query = 'SELECT id FROM summoners WHERE NAME = "{}"'.format(name)
     accountid = connect(query, "select")
-    history = watcher.match.matchlist_by_account(region, accountid, queue=420, end_index=10)
-    matchDict = {}
+    accountidstr = ' '.join([str(elem) for elem in accountid])
+    accountidstr = accountidstr[2:-3]
+    history = watcher.match.matchlist_by_account(region, accountidstr, queue=420, end_index=10)
     for idx, matches in enumerate(history["matches"]):
-        matchDict.update({idx: {'GameID': matches["gameId"], 'Region': matches["platformId"],
-                                'AccountID': accountid, 'ChampionID': matches["champion"]}})
-    return matchDict
+        query = "INSERT INTO summonermatches (matchid, region, summonerid, championid) VALUES ('{}', '{}'," \
+                " '{}', '{}')".format(matches["gameId"], matches["platformId"], accountidstr, matches["champion"])
+        connect(query, "insert")
 
 
-def getMatchDetails(matchId, champion, region):
+def getMatchDetails(matchId, accountID, region):
     game = watcher.match.by_id(region, matchId)
-    gameInfo = {}
+    query = 'SELECT championid FROM summonermatches WHERE matchid = "{}" AND summonerid = "{}"'.format(matchId,
+                                                                                                       accountID)
+    champion = connect(query, "select")
+    champion = ' '.join([str(elem) for elem in champion])
+    champion = int(champion[1:-2])
     for x in game["participants"]:
         if x["championId"] == champion:
-            kda = "{}/{}/{}".format(x["stats"]["kills"], x["stats"]["deaths"], x["stats"]["assists"])
             if x["stats"]["win"] == "Win":
                 win = True
             else:
                 win = False
 
-            gameInfo = {'Win': win, 'CS': x["stats"]["totalMinionsKilled"], 'KDA': kda, 'SummonerSpell1': x["spell1Id"],
-                        'SummonerSpell2': x["spell2Id"], 'Item0': x["stats"]["item0"], 'Item1': x["stats"]["item1"],
-                        'Item2': x["stats"]["item2"], 'Item3': x["stats"]["item3"], 'Item4': x["stats"]["item4"],
-                        'Item5': x["stats"]["item5"], 'Item6': x["stats"]["item6"]}
+            query = "UPDATE summonermatches SET win = {}, cs = {}, kills = {}, deaths = {}, assists = {}, spell1 = {}" \
+                    ", spell2 = {}, item0 = {}, item1 = {}, item2 = {}, item3 = {}, item4 = {}, item5 = {}, item6 =" \
+                    "{} WHERE matchid = '{}' AND summonerid = '{}'" \
+                .format(win, x["stats"]["totalMinionsKilled"], x["stats"]["kills"], x["stats"]["deaths"],
+                        x["stats"]["assists"], x["spell1Id"], x["spell2Id"], x["stats"]["item0"],
+                        x["stats"]["item1"], x["stats"]["item2"], x["stats"]["item3"], x["stats"]["item4"],
+                        x["stats"]["item5"], x["stats"]["item6"], matchId, accountID)
+            connect(query, "insert")
+
         else:
             continue
-    return gameInfo
-
-
-getSummoner("EUW1", "T3rmiXx")
