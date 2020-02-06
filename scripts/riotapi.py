@@ -39,8 +39,8 @@ def connect(query, status):
 def getSummoner(region, name):
     try:
         summoner = watcher.summoner.by_name(region, name)
-        query = "INSERT IGNORE INTO summoners (id, REGION, NAME) VALUES ('{}', '{}', '{}') ON DUPLICATE KEY UPDATE" \
-            .format(summoner["accountId"], region, summoner["name"])
+        query = "INSERT IGNORE INTO summoners (id, REGION, NAME) VALUES ('{0}', '{1}', '{2}') ON DUPLICATE KEY UPDATE" \
+                " REGION='{1}', NAME='{2}'".format(summoner["accountId"], region, summoner["name"])
         connect(query, "insert")
     except ApiError as err:
         if err.response.status_code == 429:
@@ -59,7 +59,7 @@ def getMatchHistory(region, name):
     history = watcher.match.matchlist_by_account(region, accountidstr, queue=420, end_index=10)
     for idx, matches in enumerate(history["matches"]):
         query = "INSERT INTO summonermatches (matchid, region, summonerid, championid, queueid) VALUES ('{}', '{}'," \
-                " '{}', '{}', '{}')".\
+                " '{}', '{}', '{}')". \
             format(matches["gameId"], matches["platformId"], accountidstr, matches["champion"], matches["queue"])
         connect(query, "insert")
 
@@ -72,7 +72,6 @@ def getMatchDetails(matchId, accountID, region):
     champion = ' '.join([str(elem) for elem in champion])
     champion = int(champion[1:-2])
     length = game["gameDuration"]
-    queue = game["queueId"]
     for x in game["participants"]:
         if x["championId"] == champion:
             if x["stats"]["win"] == "Win":
@@ -93,3 +92,26 @@ def getMatchDetails(matchId, accountID, region):
         else:
             continue
 
+
+def getRank():
+    summ = watcher.summoner.by_name("EUW1", "T3rmiXx")
+    rankInfo = watcher.league.by_summoner("EUW1", summ["id"])
+
+    if len(rankInfo) == 1:
+        if rankInfo[0]["queueType"] == "RANKED_SOLO_5x5":
+            query = "INSERT INTO ranking (summonerid, solotier, solorank, sololp) VALUES ('{0}', '{1}', '{2}', '{3}')" \
+                    "ON DUPLICATE KEY UPDATE solotier='{1}', solorank='{2}', sololp='{3}'".\
+                format(summ["accountId"], rankInfo[0]["tier"], rankInfo[0]["rank"], rankInfo[0]["leaguePoints"])
+            connect(query, "insert")
+        else:
+            query = "INSERT INTO ranking (summonerid, flextier, flexrank, flexlp) VALUES ('{0}', '{1}', '{2}', '{3}')" \
+                    "ON DUPLICATE KEY UPDATE flextier='{1}', flexrank='{2}', flexlp='{3}'".\
+                format(summ["accountId"], rankInfo[0]["tier"], rankInfo[0]["rank"], rankInfo[0]["leaguePoints"])
+            connect(query, "insert")
+    else:
+        query = "INSERT INTO ranking (summonerid, solotier, solorank, sololp, flextier, flexrank, flexlp)" \
+                "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}') ON DUPLICATE KEY" \
+                "UPDATE flextier='{1}', flexrank='{2}', flexlp='{3}' solotier='{4}', solorank='{5}', sololp='{6}'".\
+            format(summ["accountId"], rankInfo[1]["tier"], rankInfo[1]["rank"], rankInfo[1]["leaguePoints"],
+                   rankInfo[0]["tier"], rankInfo[0]["rank"], rankInfo[0]["leaguePoints"])
+        connect(query, "insert")
