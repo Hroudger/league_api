@@ -1,10 +1,31 @@
 package summoner;
 
+import service.MatchHistoryService;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchHistory {
     private List<Match> matchList = new ArrayList<>();
+    private String summonerid;
+
+
+    public MatchHistory(String summonerid) throws SQLException {
+        this.summonerid = summonerid;
+        loadHistory();
+    }
+
+    public void loadHistory() throws SQLException {
+        if (summonerid != null && !summonerid.equals("")) {
+            return;
+        }
+
+        MatchHistoryService matchHistoryService = new MatchHistoryService(summonerid);
+
+        matchList = matchHistoryService.getMatchList();
+    }
+
 
     public int getWinRate() {
         return getWinRate("ranked");
