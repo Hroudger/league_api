@@ -1,20 +1,26 @@
 package summoner;
 
+import champion.Champion;
+
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Summoner {
 
-    private MatchHistory matchHistory = new MatchHistory();
+    private MatchHistory matchHistory;
     private String id;
     private String name;
     private String region;
+    private List<Champion> championList = new ArrayList<>();
 
 
-    public Summoner(String id, String name, String region) {
+    public Summoner(String id, String name, String region) throws SQLException {
         this.id = id;
         this.name = name;
         this.region = region;
+        this.matchHistory = new MatchHistory(this.id);
     }
 
     public static void addSummoner(String name, String region) throws IOException {
@@ -62,5 +68,9 @@ public class Summoner {
 
     public String getRegion() {
         return region;
+    }
+
+    public List<Champion> getChampionList(){
+        return championList;
     }
 }
