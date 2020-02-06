@@ -10,9 +10,13 @@ import java.awt.event.MouseEvent;
 public class OverviewFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
-
     private final Summoner summoner;
     private final AccountSelector accountSelector;
+
+    private JPanel openedPanel;
+    private JCheckBoxMenuItem ranked;
+    private JCheckBoxMenuItem normal;
+    private JCheckBoxMenuItem aram;
 
     public OverviewFrame(AccountSelector accountSelector, String summonerName) {
         this.accountSelector = accountSelector;
@@ -21,26 +25,86 @@ public class OverviewFrame extends JFrame {
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setLayout(null);
-        setForeground(Color.BLUE);
-        setBackground(Color.BLUE);
         addMenuItem();
+        summoner = new Summoner("dsad", "DarkBlace", "EUW");
+//        summoner = loadSummoner(summonerName);
+        openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+        OverviewFrame.this.add(openedPanel);
+        openedPanel.setBounds(0, 0, getWidth(), getHeight());
+        openedPanel.setVisible(true);
         setVisible(true);
-        summoner = loadSummoner(summonerName);
+    }
+
+    private void addAnalysisItems(JMenuBar menuBar) {
+        final JMenu analysis = new JMenu("Analyse");
+        final JMenuItem champ = new JMenuItem("Champion");
+        champ.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                OverviewFrame.this.remove(openedPanel);
+                openedPanel = new ChampionPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+                OverviewFrame.this.remove(openedPanel);
+                openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
+                openedPanel.setVisible(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseClicked(e);
+            }
+        });
+        final JMenuItem games = new JMenuItem("Spiele");
+        games.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                OverviewFrame.this.remove(openedPanel);
+                openedPanel = new GamesPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+                OverviewFrame.this.add(openedPanel);
+                openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
+                openedPanel.setVisible(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseClicked(e);
+            }
+        });
+        final JMenuItem elo = new JMenuItem("Elo");
+        elo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                OverviewFrame.this.remove(openedPanel);
+                openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+                OverviewFrame.this.add(openedPanel);
+                openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
+                openedPanel.setVisible(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseClicked(e);
+            }
+        });
+        analysis.add(elo);
+        analysis.add(games);
+        analysis.add(champ);
+        menuBar.add(analysis);
     }
 
     private void addMenuItem() {
         final JMenuBar menuBar = new JMenuBar();
         addActionItems(menuBar);
         addModeSelection(menuBar);
+        addAnalysisItems(menuBar);
         menuBar.setVisible(true);
         setJMenuBar(menuBar);
     }
 
     private void addModeSelection(JMenuBar menuBar) {
         final JMenu gameSelection = new JMenu("Spielmodus");
-        final JCheckBoxMenuItem ranked = new JCheckBoxMenuItem("Ranked Game");
-        final JCheckBoxMenuItem normal = new JCheckBoxMenuItem("Normal Game");
-        final JCheckBoxMenuItem aram = new JCheckBoxMenuItem("ARAM Game");
+        ranked = new JCheckBoxMenuItem("Ranked Game");
+        normal = new JCheckBoxMenuItem("Normal Game");
+        aram = new JCheckBoxMenuItem("ARAM Game");
         gameSelection.add(ranked);
         gameSelection.add(normal);
         gameSelection.add(aram);

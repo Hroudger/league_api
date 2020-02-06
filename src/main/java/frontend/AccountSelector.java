@@ -4,7 +4,6 @@ import region.Region;
 import summoner.Summoner;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -27,8 +26,6 @@ public class AccountSelector extends JFrame {
         setBounds(100, 100, 600, 600);
         setLocation(100, 100);
         setLayout(null);
-        setForeground(Color.BLUE);
-        setBackground(Color.BLUE);
         summonerDefaultListModel = new DefaultListModel<>();
         summonerDefaultListModel.insertElementAt("DerMalko", 0);
         for (int i = 0; i < summonersList.size(); i++) {
@@ -112,6 +109,11 @@ public class AccountSelector extends JFrame {
                     summonerDefaultListModel.addElement(sb.toString() + " " + userNameInput.getText());
                     userNameInput.setText("");
                 }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseClicked(e);
             }
         });
     }
