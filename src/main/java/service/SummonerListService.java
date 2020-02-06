@@ -9,16 +9,12 @@ import java.util.List;
 public class SummonerListService {
 
     private List<Summoner> summoners = new ArrayList<>();
-    private String dbName = "league:api";
-    private String dbUser = "league_api";
-    private String dbPassword = "";
+
 
 
     public SummonerListService() throws SQLException {
-        Connection con = DriverManager.getConnection(
-                "jdbc:myDriver:".concat(dbName),
-                dbUser,
-                dbPassword);
+
+        Connection con = DataBaseConnector.getConnection();
 
         String sql = "SELECT id FROM summoners";
         Statement stmt = con.createStatement();
