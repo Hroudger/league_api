@@ -58,8 +58,9 @@ def getMatchHistory(region, name):
     accountidstr = accountidstr[2:-3]
     history = watcher.match.matchlist_by_account(region, accountidstr, queue=420, end_index=10)
     for idx, matches in enumerate(history["matches"]):
-        query = "INSERT INTO summonermatches (matchid, region, summonerid, championid) VALUES ('{}', '{}'," \
-                " '{}', '{}')".format(matches["gameId"], matches["platformId"], accountidstr, matches["champion"])
+        query = "INSERT INTO summonermatches (matchid, region, summonerid, championid, queueid) VALUES ('{}', '{}'," \
+                " '{}', '{}', '{}')".\
+            format(matches["gameId"], matches["platformId"], accountidstr, matches["champion"], matches["queue"])
         connect(query, "insert")
 
 
@@ -70,6 +71,8 @@ def getMatchDetails(matchId, accountID, region):
     champion = connect(query, "select")
     champion = ' '.join([str(elem) for elem in champion])
     champion = int(champion[1:-2])
+    length = game["gameDuration"]
+    queue = game["queueId"]
     for x in game["participants"]:
         if x["championId"] == champion:
             if x["stats"]["win"] == "Win":
@@ -77,14 +80,16 @@ def getMatchDetails(matchId, accountID, region):
             else:
                 win = False
 
-            query = "UPDATE summonermatches SET win = {}, cs = {}, kills = {}, deaths = {}, assists = {}, spell1 = {}" \
-                    ", spell2 = {}, item0 = {}, item1 = {}, item2 = {}, item3 = {}, item4 = {}, item5 = {}, item6 =" \
-                    "{} WHERE matchid = '{}' AND summonerid = '{}'" \
-                .format(win, x["stats"]["totalMinionsKilled"], x["stats"]["kills"], x["stats"]["deaths"],
-                        x["stats"]["assists"], x["spell1Id"], x["spell2Id"], x["stats"]["item0"],
-                        x["stats"]["item1"], x["stats"]["item2"], x["stats"]["item3"], x["stats"]["item4"],
-                        x["stats"]["item5"], x["stats"]["item6"], matchId, accountID)
+            query = "UPDATE summonermatches SET win = {}, duration = {}, cs = {}, kills = {}, deaths = {}, assists =" \
+                    "{}, level = {}, visionscore = {}, spell1 = {}, spell2 = {}, item0 = {}, item1 = {}, item2 = {}," \
+                    "item3 = {}, item4 = {}, item5 = {}, item6 = {} WHERE matchid = '{}' AND summonerid = '{}'" \
+                .format(win, length, x["stats"]["totalMinionsKilled"], x["stats"]["kills"], x["stats"]["deaths"],
+                        x["stats"]["assists"], x["stats"]["champLevel"], x["stats"]["visionScore"], x["spell1Id"],
+                        x["spell2Id"], x["stats"]["item0"], x["stats"]["item1"], x["stats"]["item2"],
+                        x["stats"]["item3"], x["stats"]["item4"], x["stats"]["item5"], x["stats"]["item6"],
+                        matchId, accountID)
             connect(query, "insert")
 
         else:
             continue
+
