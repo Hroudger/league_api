@@ -33,10 +33,10 @@ public class Summoner {
 
     public static void addSummoner(String name, String region) throws IOException {
         String[] cmd = {
-                "python",
-                "MEIN SCRIPTPFAD",
-                name,
-                region
+            "python",
+            "MEIN SCRIPTPFAD",
+            name,
+            region
         };
         Runtime.getRuntime().exec(cmd);
     }
@@ -77,16 +77,8 @@ public class Summoner {
         return division;
     }
 
-    public Champion getBestChampion(String queue) {
-        if ("".equals(queue)) {
-            return matchHistory.getBestChampion();
-        }
-        else if ("solo".equals(queue)) {
-            return matchHistory.getBestSoloChamp();
-        }
-        else {
-            return matchHistory.getBestFlexChamp();
-        }
+    public Champion getBestChampion() {
+        return matchHistory.getBestChampion();
     }
 
     public int getAvgGameLength() {
@@ -108,7 +100,7 @@ public class Summoner {
     }
 
     public List<Match> getMatchList() {
-        return matchList;
+        return matchHistory.getMatchList();
     }
 
     public Elo getElo() {

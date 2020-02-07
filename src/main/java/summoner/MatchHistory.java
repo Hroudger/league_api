@@ -1,6 +1,5 @@
 package summoner;
 
-import champion.Champion;
 import service.MatchHistoryService;
 
 import java.sql.SQLException;
@@ -8,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MatchHistory {
+
     private List<Match> matchList = new ArrayList<>();
     private String summonerid;
-
 
     public MatchHistory(String summonerid) throws SQLException {
         this.summonerid = summonerid;
@@ -26,7 +25,6 @@ public class MatchHistory {
 
         matchList = matchHistoryService.getMatchList();
     }
-
 
     public int getWinRate() {
         return getWinRate("ranked");
@@ -54,17 +52,5 @@ public class MatchHistory {
 
     public List<Match> getMatchList() {
         return matchList;
-    }
-
-    public Champion getBestChampion() {
-        return null;
-    }
-
-    public Champion getBestSoloChamp() {
-        return null;
-    }
-
-    public Champion getBestFlexChamp() {
-        return null;
     }
 }

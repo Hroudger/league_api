@@ -29,7 +29,7 @@ public class OverviewFrame extends JFrame {
         setLayout(null);
         addMenuItem();
         summoner = loadSummoner(summonerName, region);
-        openedPanel = new EloPanel(soloDuo.getState(), flex.getState(), summoner);
+        openedPanel = new EloPanel(summoner);
         OverviewFrame.this.add(openedPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         CloseUtils.addCloseListener(this);
@@ -63,7 +63,7 @@ public class OverviewFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 OverviewFrame.this.getContentPane().removeAll();
-                openedPanel = new GamesPanel(soloDuo.getState(), flex.getState(), summoner);
+                openedPanel = new GamesPanel(summoner);
                 OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
@@ -81,7 +81,7 @@ public class OverviewFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 OverviewFrame.this.getContentPane().removeAll();
-                openedPanel = new EloPanel(soloDuo.getState(), flex.getState(), summoner);
+                openedPanel = new EloPanel(summoner);
                 OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
@@ -155,7 +155,7 @@ public class OverviewFrame extends JFrame {
                 try {
                     summoner.loadMatchHistory();
                     OverviewFrame.this.getContentPane().removeAll();
-                    openedPanel = new EloPanel(soloDuo.getState(), flex.getState(), summoner);
+                    openedPanel = new EloPanel(summoner);
                     OverviewFrame.this.add(openedPanel);
                     openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                     openedPanel.setVisible(true);

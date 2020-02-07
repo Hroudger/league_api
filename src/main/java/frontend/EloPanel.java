@@ -15,7 +15,7 @@ public class EloPanel extends JPanel {
 
     private final Summoner summoner;
 
-    public EloPanel(boolean rankedState, boolean normalState, Summoner summoner) {
+    public EloPanel(Summoner summoner) {
         this.summoner = summoner;
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());

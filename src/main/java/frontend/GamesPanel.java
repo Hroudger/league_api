@@ -17,10 +17,9 @@ public class GamesPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private final List<Match> matchesList;
 
-    public GamesPanel(boolean rankedState, boolean normalState, Summoner summoner) {
+    public GamesPanel(Summoner summoner) {
         matchesList = summoner.getMatchList();
         setLayout(new BorderLayout());
-        matchesList.add(new Match("1", "EUW", "1S", 34, 1, 16, 1, 300, 2, 3, List.of(3, 4, 5), new KDA(5, 1, 2), 2, 17));
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         addChampionList();
