@@ -19,15 +19,6 @@ public class Match {
     private int spell2;
     private List<Integer> itemList;
     private KDA kda;
-
-    public int getGameDuration() {
-        return gameDuration;
-    }
-
-    public int getGameMode() {
-        return gameMode;
-    }
-
     private int gameMode;
     private int visionScore;
 
@@ -141,5 +132,13 @@ public class Match {
 
     public int getMinutes() {
         return (int) Math.floor(gameDuration / 60);
+    }
+
+    public int getGameDuration() {
+        return gameDuration;
+    }
+
+    public int getGameMode() {
+        return gameMode;
     }
 }
