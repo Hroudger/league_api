@@ -63,9 +63,8 @@ public class Match {
         return cs;
     }
 
-    public float getCsMin(){
-        //todo: get cs min score
-        return 0;
+    public double getCsMin() {
+        return ((double)(cs * 60)) / gameDuration;
     }
 
     public int getSpell1() {
@@ -76,36 +75,44 @@ public class Match {
         return spell2;
     }
 
-    public List<Integer> getItems(){
+    public List<Integer> getItems() {
         return new ArrayList<>();
     }
 
+    private int getItemByIndex(int i) {
+        if (i >= 0 && i < itemList.size()) {
+            return itemList.get(i);
+        }
+        return 0;
+
+    }
+
     public int getItem0() {
-        return itemList.get(0);
+        return getItemByIndex(0);
     }
 
     public int getItem1() {
-        return itemList.get(1);
+        return getItemByIndex(1);
     }
 
     public int getItem2() {
-        return itemList.get(2);
+        return getItemByIndex(2);
     }
 
     public int getItem3() {
-        return itemList.get(3);
+        return getItemByIndex(3);
     }
 
     public int getItem4() {
-        return itemList.get(4);
+        return getItemByIndex(4);
     }
 
     public int getItem5() {
-        return itemList.get(5);
+        return getItemByIndex(5);
     }
 
     public int getItem6() {
-        return itemList.get(6);
+        return getItemByIndex(6);
     }
 
     public KDA getKda() {
@@ -114,5 +121,13 @@ public class Match {
 
     public int getVisionScore() {
         return visionScore;
+    }
+
+    public int getChampLevel() {
+        return champLevel;
+    }
+
+    public int getMinutes() {
+        return (int) Math.floor(gameDuration / 60);
     }
 }
