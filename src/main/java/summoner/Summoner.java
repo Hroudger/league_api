@@ -64,15 +64,6 @@ public class Summoner {
         return matchHistory.getAmount();
     }
 
-    public int getPercentage(String queue) {
-        return matchHistory.getPercentage(queue);
-    }
-
-    public int getPercentage() {
-        return matchHistory.getPercentage();
-    }
-
-
     public String getName() {
         return name;
     }
