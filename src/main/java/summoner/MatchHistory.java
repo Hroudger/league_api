@@ -119,7 +119,7 @@ public class MatchHistory {
             for (Integer integer : champWinAmount.keySet()) {
                 int champWinrate = champWinAmount.get(integer) * 100 / champGameAmount.get(integer);
                 int champId = 0;
-                if (champWinrate > bestChampWinrate){
+                if (champWinrate > bestChampWinrate) {
                     bestChampion = champId;
                     bestChampWinrate = champWinrate;
                 }
@@ -132,7 +132,7 @@ public class MatchHistory {
         int winrate = 0;
 
         if (winAmount > 0) {
-            winrate =  matchWon.size() * 100 / amountGames;
+            winrate = matchWon.size() * 100 / amountGames;
         }
 
         values.add(winrate);
@@ -160,17 +160,13 @@ public class MatchHistory {
         return 0;
     }
 
-
     public Champion getBestChampion() {
+
         return new Champion(0);
     }
 
     public List<Match> getMatchList() {
         return matchList;
-    }
-
-    public Champion getBestChampion() {
-        return null;
     }
 
     public Champion getBestSoloChamp() {
