@@ -10,6 +10,7 @@ import java.util.List;
 public class Summoner {
 
     private MatchHistory matchHistory;
+    private final List<Match> matchList;
     private String id;
     private String name;
     private String region;
@@ -21,6 +22,7 @@ public class Summoner {
         this.name = name;
         this.region = region;
         this.matchHistory = new MatchHistory(this.id);
+        matchList = new ArrayList<>();
     }
 
     public static void addSummoner(String name, String region) throws IOException {
@@ -34,7 +36,7 @@ public class Summoner {
     }
 
     public void loadMatchHistory() throws SQLException {
-        matchHistory.loadHistory();
+//        matchHistory.loadHistory();
     }
 
     public int getWinRate(String queue) {
@@ -70,7 +72,19 @@ public class Summoner {
         return region;
     }
 
-    public List<Champion> getChampionList(){
+    public List<Champion> getChampionList() {
         return championList;
+    }
+
+    public List<Match> getMatchList() {
+        return matchList;
+    }
+
+    public Elo getElo() {
+        return Elo.IRON;
+    }
+
+    public int getLp() {
+        return 0;
     }
 }

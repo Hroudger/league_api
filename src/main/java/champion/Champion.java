@@ -31,5 +31,23 @@ public class Champion {
         return championId;
     }
 
+    public int getAmountGames() {
+        return amountGames;
+    }
 
+    public int getPercentGames() {
+        return percentGames;
+    }
+
+    public int getWinrate() {
+        return winrate;
+    }
+
+    public int getAvgGameLength() {
+        return avgGameLength;
+    }
+
+    public float getCsMin() {
+        return csMin;
+    }
 }

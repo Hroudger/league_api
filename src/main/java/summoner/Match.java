@@ -115,4 +115,16 @@ public class Match {
     public int getVisionScore() {
         return visionScore;
     }
+
+    public int getGameMode() {
+        return gameMode;
+    }
+
+    public int getGameDuration() {
+        return gameDuration;
+    }
+
+    public int getChampLevel() {
+        return champLevel;
+    }
 }
