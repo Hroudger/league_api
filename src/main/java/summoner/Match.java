@@ -19,6 +19,15 @@ public class Match {
     private int spell2;
     private List<Integer> itemList;
     private KDA kda;
+
+    public int getGameDuration() {
+        return gameDuration;
+    }
+
+    public int getGameMode() {
+        return gameMode;
+    }
+
     private int gameMode;
     private int visionScore;
 
@@ -64,7 +73,10 @@ public class Match {
     }
 
     public double getCsMin() {
-        return ((double)(cs * 60)) / gameDuration;
+        if (gameDuration == 0) {
+            return cs;
+        }
+        return ((double) (cs * 60)) / gameDuration;
     }
 
     public int getSpell1() {
