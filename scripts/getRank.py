@@ -1,4 +1,3 @@
-#!./venv/bin/python
 import sys
 from riotwatcher import RiotWatcher
 import mysql.connector as sql

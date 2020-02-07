@@ -51,5 +51,4 @@ def getSummoner(region, name):
             raise
 
 
-#getSummoner(sys.argv[1], sys.argv[2])
-getSummoner("EUW1", "T3rmiXx")
+getSummoner(sys.argv[1], sys.argv[2])
