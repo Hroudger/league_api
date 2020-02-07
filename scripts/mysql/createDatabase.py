@@ -1,3 +1,4 @@
+#!./../venv/bin/python
 import mysql.connector as sql
 from mysql.connector import Error
 
@@ -13,7 +14,6 @@ try:
     file = open("league_api.sql", 'r')
     sql = s = " ".join(file.readlines())
     cursor.execute(sql)
-    conn.commit()
 
 except Error as e:
     print(e)
