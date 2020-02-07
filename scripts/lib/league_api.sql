@@ -9,7 +9,15 @@ SET time_zone = "+00:00";
 
 CREATE DATABASE league_api;
 
-CREATE USER 'league_api'@'%' IDENTIFIED WITH mysql_native_password AS '***'; GRANT USAGE ON *.* TO 'league_api'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; GRANT ALL PRIVILEGES ON `league_api`.* TO 'league_api'@'%';
+CREATE USER 'league_api'@'%' IDENTIFIED WITH mysql_native_password AS '***';
+
+GRANT USAGE ON *.* TO 'league_api'@'%' REQUIRE NONE WITH
+    MAX_QUERIES_PER_HOUR 0
+    MAX_CONNECTIONS_PER_HOUR 0
+    MAX_UPDATES_PER_HOUR 0
+    MAX_USER_CONNECTIONS 0;
+
+GRANT ALL PRIVILEGES ON `league_api`.* TO 'league_api'@'%';
 
 USE league_api;
 
