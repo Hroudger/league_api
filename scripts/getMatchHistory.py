@@ -1,6 +1,6 @@
 #!./venv/bin/python
 import sys
-from riotwatcher import RiotWatcher, ApiError
+from riotwatcher import RiotWatcher
 import mysql.connector as sql
 from mysql.connector import Error
 
@@ -43,10 +43,11 @@ def getMatchHistory(region, name):
     accountid = connect(query, "select")
     accountidstr = ' '.join([str(elem) for elem in accountid])
     accountidstr = accountidstr[2:-3]
-    history = watcher.match.matchlist_by_account(region, accountidstr, queue=420, end_index=10)
+    queues = 420, 440
+    history = watcher.match.matchlist_by_account(region, accountidstr, queue=queues, end_index=50)
     for idx, matches in enumerate(history["matches"]):
-        query = "INSERT INTO summonermatches (matchid, region, summonerid, championid, queueid, timestamp) VALUES" \
-                "('{}', '{}', '{}', '{}', '{}', {})". \
+        query = "INSERT IGNORE INTO summonermatches (matchid, region, summonerid, championid, queueid, timestamp)" \
+                "VALUES ('{}', '{}', '{}', '{}', '{}', '{}')". \
             format(matches["gameId"], matches["platformId"], accountidstr, matches["champion"],
                    matches["queue"], matches['timestamp'])
         connect(query, "insert")

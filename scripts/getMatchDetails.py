@@ -52,11 +52,12 @@ def getMatchDetails(matchId, accountID, region):
                 win = True
             else:
                 win = False
+            minions = x["stats"]["totalMinionsKilled"] + x["stats"]["neutralMinionsKilled"]
 
             query = "UPDATE summonermatches SET win = {}, duration = {}, cs = {}, kills = {}, deaths = {}, assists =" \
                     "{}, level = {}, visionscore = {}, spell1 = {}, spell2 = {}, item0 = {}, item1 = {}, item2 = {}," \
                     "item3 = {}, item4 = {}, item5 = {}, item6 = {} WHERE matchid = '{}' AND summonerid = '{}'" \
-                .format(win, length, x["stats"]["totalMinionsKilled"], x["stats"]["kills"], x["stats"]["deaths"],
+                .format(win, length, minions, x["stats"]["kills"], x["stats"]["deaths"],
                         x["stats"]["assists"], x["stats"]["champLevel"], x["stats"]["visionScore"], x["spell1Id"],
                         x["spell2Id"], x["stats"]["item0"], x["stats"]["item1"], x["stats"]["item2"],
                         x["stats"]["item3"], x["stats"]["item4"], x["stats"]["item5"], x["stats"]["item6"],
