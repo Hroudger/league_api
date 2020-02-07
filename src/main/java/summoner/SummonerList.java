@@ -29,4 +29,14 @@ public class SummonerList {
     public List<Summoner> getSummonerList() {
         return summoners;
     }
+
+    public Summoner getSummoner(String name, String region) throws Exception {
+        for (Summoner summoner : summoners) {
+            if (summoner.getName().equals(name) && summoner.getRegion().equals(region)) {
+                return summoner;
+            }
+        }
+        throw new Exception("Summoner not found with region: " + region + " name: " + name);
+    }
+
 }
