@@ -42,7 +42,7 @@ public abstract class DataBaseConnector {
     public static PreparedStatement getPreparedStatement(String sql, List<String> list) throws SQLException {
         PreparedStatement stmt = getConnection().prepareStatement(sql);
 
-        for (int i = 0; i <= list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             stmt.setString(i + 1, list.get(i));
         }
         return stmt;
