@@ -155,6 +155,6 @@ public class OverviewFrame extends JFrame {
     }
 
     private Summoner loadSummoner(String summonerName, Region region) {
-        return accountSelector.getSummoners().findByNameAndRegion(summonerName, region);
+        return accountSelector.getSummoners().getSummoner(summonerName, region);
     }
 }

@@ -18,7 +18,7 @@ public class AccountSelector extends JFrame {
 
     private final DefaultListModel<String> summonerDefaultListModel;
     private final JPanel panel;
-    private final List<Summoner> summoners;
+    private final SummonerList summonersList;
 
     private JList<String> summonerSelectionList;
     private JTextField userNameInput;
@@ -31,6 +31,7 @@ public class AccountSelector extends JFrame {
         panel = new JPanel();
         panel.setBounds(0, 0, getWidth(), getHeight());
         summonerDefaultListModel = new DefaultListModel<>();
+        this.summonersList = summonersList;
         final List<Summoner> summoners = summonersList.getSummonerList();
         for (int i = 0; i < summoners.size(); i++) {
             summonerDefaultListModel.insertElementAt(summoners.get(i), i);
@@ -207,7 +208,7 @@ public class AccountSelector extends JFrame {
         panel.add(scrollPane);
     }
 
-    public List<Summoner> getSummoners() {
-        return summoners;
+    public SummonerList getSummoners() {
+        return summonersList;
     }
 }
