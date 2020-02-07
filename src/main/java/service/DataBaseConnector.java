@@ -4,15 +4,24 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public abstract class DataBaseConnector {
 
-    private static String dbName = "league:api";
+    private static String dbName = "league_api";
     private static String dbUser = "league_api";
     private static String dbPassword = "";
 
     public static Connection getConnection() throws SQLException {
+
+        /*
+        try {
+            Class.forName("cjom.mysql.jdbc.Driver").newInstance();
+        } catch (Exception e) {
+            System.out.println("aasasasad");
+            return null;
+        }*/
         return DriverManager.getConnection(
-                "jdbc:myDriver:".concat(dbName),
+                "jdbc:mysql://localhost/".concat(dbName),
                 dbUser,
                 dbPassword);
     }
