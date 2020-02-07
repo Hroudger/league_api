@@ -17,7 +17,7 @@ public class MatchHistoryService {
 
         matchList = new ArrayList<>();
 
-        String sql = "SELECT matchid FROM summonermatches WHERE summonerid = ?";
+        String sql = "SELECT matchid FROM summonermatches WHERE summonerid = ? ORDER BY timestamp desc";
         PreparedStatement stmt = DataBaseConnector.getPreparedStatement(sql, summonerid);
 
         ResultSet rs = stmt.executeQuery();
