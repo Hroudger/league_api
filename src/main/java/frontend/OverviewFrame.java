@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class OverviewFrame extends JFrame {
 
@@ -148,6 +149,30 @@ public class OverviewFrame extends JFrame {
             }
         });
         final JMenuItem update = new JMenuItem("Daten aktualisieren");
+        update.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    summoner.loadMatchHistory();
+                    OverviewFrame.this.getContentPane().removeAll();
+                    openedPanel = new EloPanel(soloDuo.getState(), flex.getState(), summoner);
+                    OverviewFrame.this.add(openedPanel);
+                    openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
+                    openedPanel.setVisible(true);
+                    setVisible(false);
+                    setVisible(true);
+                }
+                catch (SQLException ex) {
+                    ex.getStackTrace();
+                }
+                dispose();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseClicked(e);
+            }
+        });
         options.add(update);
         options.add(changeSummoner);
         options.add(end);
@@ -155,6 +180,12 @@ public class OverviewFrame extends JFrame {
     }
 
     private Summoner loadSummoner(String summonerName, Region region) {
-        return accountSelector.getSummoners().getSummoner(summonerName, region);
+        try {
+            return accountSelector.getSummoners().getSummoner(summonerName, region);
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        return null;
     }
 }

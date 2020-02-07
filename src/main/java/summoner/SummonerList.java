@@ -1,5 +1,6 @@
 package summoner;
 
+import region.Region;
 import service.SummonerListService;
 
 import java.sql.SQLException;
@@ -30,9 +31,9 @@ public class SummonerList {
         return summoners;
     }
 
-    public Summoner getSummoner(String name, String region) throws Exception {
+    public Summoner getSummoner(String name, Region region) throws Exception {
         for (Summoner summoner : summoners) {
-            if (summoner.getName().equals(name) && summoner.getRegion().equals(region)) {
+            if (summoner.getName().equals(name) && summoner.getRegion() == region) {
                 return summoner;
             }
         }

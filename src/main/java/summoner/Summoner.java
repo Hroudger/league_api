@@ -1,6 +1,7 @@
 package summoner;
 
 import champion.Champion;
+import region.Region;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -9,19 +10,24 @@ import java.util.List;
 
 public class Summoner {
 
-    private MatchHistory matchHistory;
+    private final MatchHistory matchHistory;
     private final List<Match> matchList;
-    private String id;
-    private String name;
-    private String region;
-    private List<Champion> championList = new ArrayList<>();
+    private final String id;
+    private final String name;
+    private final Region region;
+    private final List<Champion> championList = new ArrayList<>();
+    private final Elo elo;
+    private final int division;
+    private final int lp;
 
-
-    public Summoner(String id, String name, String region) throws SQLException {
+    public Summoner(String id, String name, Region region, Elo elo, int division, int lp) throws SQLException {
         this.id = id;
         this.name = name;
         this.region = region;
         this.matchHistory = new MatchHistory(this.id);
+        this.elo = elo;
+        this.division = division;
+        this.lp = lp;
         matchList = new ArrayList<>();
     }
 
@@ -36,7 +42,7 @@ public class Summoner {
     }
 
     public void loadMatchHistory() throws SQLException {
-//        matchHistory.loadHistory();
+        matchHistory.loadHistory();
     }
 
     public int getWinRate(String queue) {
@@ -63,12 +69,37 @@ public class Summoner {
         return matchHistory.getPercentage();
     }
 
-
     public String getName() {
         return name;
     }
 
-    public String getRegion() {
+    public int getDivision() {
+        return division;
+    }
+
+    public Champion getBestChampion(String queue) {
+        if ("".equals(queue)) {
+            return matchHistory.getBestChampion();
+        }
+        else if ("solo".equals(queue)) {
+            return matchHistory.getBestSoloChamp();
+        }
+        else {
+            return matchHistory.getBestFlexChamp();
+        }
+    }
+
+    public int getAvgGameLength() {
+        final List<Match> matchList = matchHistory.getMatchList();
+        int sum = 0;
+        for (Match match : matchList) {
+            sum += match.getGameDuration();
+        }
+        sum = sum / matchList.size();
+        return sum;
+    }
+
+    public Region getRegion() {
         return region;
     }
 
@@ -81,10 +112,10 @@ public class Summoner {
     }
 
     public Elo getElo() {
-        return Elo.IRON;
+        return elo;
     }
 
     public int getLp() {
-        return 0;
+        return lp;
     }
 }

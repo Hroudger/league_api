@@ -41,7 +41,7 @@ public class EloPanel extends JPanel {
         final JPanel bestChampPanel = new JPanel();
         final JLabel bestChampText = new JLabel("Best Champ");
         bestChampPanel.add(bestChampText);
-        final String bestChampName = summoner.getBestChamp().getName();
+        final String bestChampName = summoner.getBestChampion().getName();
         try {
             final BufferedImage myPicture = ImageIO.read(new File("files/champion/" + bestChampName + ".png"));
             final JLabel picLabel = new JLabel(new ImageIcon(myPicture));

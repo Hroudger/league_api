@@ -1,5 +1,6 @@
 package summoner;
 
+import champion.Champion;
 import service.MatchHistoryService;
 
 import java.sql.SQLException;
@@ -51,5 +52,19 @@ public class MatchHistory {
         return getPercentage("ranked");
     }
 
+    public List<Match> getMatchList() {
+        return matchList;
+    }
 
+    public Champion getBestChampion() {
+        return null;
+    }
+
+    public Champion getBestSoloChamp() {
+        return null;
+    }
+
+    public Champion getBestFlexChamp() {
+        return null;
+    }
 }
