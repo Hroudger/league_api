@@ -2,7 +2,6 @@ package summoner;
 
 import champion.Champion;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,26 @@ public class Summoner {
         this.matchHistory = new MatchHistory(this.id);
     }
 
-    public static void addSummoner(String name, String region) throws IOException {
+    public static void addSummoner(String name, String region) throws Exception {
         String[] cmd = {
                 "python",
                 "MEIN SCRIPTPFAD",
                 name,
                 region
         };
-        Runtime.getRuntime().exec(cmd);
+        Process p = Runtime.getRuntime().exec(cmd);
+        p.waitFor();
+        int exitValue = p.exitValue();
+        if (p.exitValue() > 0) {
+            switch (exitValue) {
+                case 1:
+                    throw new Exception("API key used to often");
+                case 2:
+                    throw new Exception("Summoner not existing");
+                default:
+                    throw new Exception("Error at adding Summoner");
+            }
+        }
     }
 
     public void loadMatchHistory() throws SQLException {
@@ -70,7 +81,7 @@ public class Summoner {
         return region;
     }
 
-    public List<Champion> getChampionList(){
+    public List<Champion> getChampionList() {
         return championList;
     }
 }
