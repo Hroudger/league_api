@@ -114,7 +114,7 @@ public class MatchHistory {
         }
 
         int bestChampion = 0;
-        int bestChampWinrate = 0;
+        int bestChampWinrate = -1;
         if (champWinAmount.size() > 0) {
             for (Integer integer : champWinAmount.keySet()) {
                 int champWinrate = champWinAmount.get(integer) * 100 / champGameAmount.get(integer);
@@ -143,37 +143,74 @@ public class MatchHistory {
         return values;
     }
 
-
     public int getWinRate() {
-        return getWinRate("ranked");
+        return getWinRate("solo");
     }
 
     public int getWinRate(String queue) {
+
+        switch (queue) {
+            case "all":
+                return winrateAll;
+            case "solo":
+                return winrateSolo;
+            case "flex":
+                return winrateFlex;
+        }
+
         return 0;
     }
 
     public int getAmount() {
-        return getAmount("ranked");
+        return getAmount("solo");
     }
 
     public int getAmount(String queue) {
+        switch (queue) {
+            case "all":
+                return amountGamesAll;
+            case "solo":
+                return amountGamesSolo;
+            case "flex":
+                return amountGamesFlex;
+            default:
+                return 0;
+        }
+    }
+
+    public int getWinAmount() {
+        return getWinAmount("all");
+    }
+
+    public int getWinAmount(String queue) {
+        switch (queue) {
+            case "all":
+                return winAmountAll;
+            case "solo":
+                return winAmountSolo;
+            case "flex":
+                return winAmountFlex;
+        }
         return 0;
     }
 
     public Champion getBestChampion() {
+        return getBestChampion("all");
+    }
 
+    public Champion getBestChampion(String queue) {
+        switch (queue) {
+            case "all":
+                return bestChampionAll;
+            case "solo":
+                return bestChampionSolo;
+            case "flex":
+                return bestChampionFlex;
+        }
         return new Champion(0);
     }
 
     public List<Match> getMatchList() {
         return matchList;
-    }
-
-    public Champion getBestSoloChamp() {
-        return null;
-    }
-
-    public Champion getBestFlexChamp() {
-        return null;
     }
 }
