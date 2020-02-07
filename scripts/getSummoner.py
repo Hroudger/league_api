@@ -1,4 +1,3 @@
-#!./venv/bin/python
 import sys
 from riotwatcher import RiotWatcher, ApiError
 import mysql.connector as sql
@@ -31,9 +30,8 @@ def connect(query, status):
         print(e)
 
     finally:
-        if conn.is_connected():
-            conn.close()
-            cursor.close()
+        conn.close()
+        cursor.close()
 
     return records
 
@@ -53,4 +51,5 @@ def getSummoner(region, name):
             raise
 
 
-getSummoner(sys.argv[1], sys.argv[2])
+#getSummoner(sys.argv[1], sys.argv[2])
+getSummoner("EUW1", "T3rmiXx")
