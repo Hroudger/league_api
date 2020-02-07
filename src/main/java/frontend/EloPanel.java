@@ -2,8 +2,12 @@ package frontend;
 
 import summoner.Summoner;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class EloPanel extends JPanel {
 
@@ -11,20 +15,49 @@ public class EloPanel extends JPanel {
 
     private final Summoner summoner;
 
-    public EloPanel(boolean rankedState, boolean normalState, boolean aramState, Summoner summoner) {
+    public EloPanel(boolean rankedState, boolean normalState, Summoner summoner) {
         this.summoner = summoner;
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setVisible(true);
-        addNameField();
-        addEloField();
-//        addEloAtSeasonEndField();
-//        addDetailedEloField();
-//        addBestChampField();
-//        addGameLengthField();
+        setLayout(new GridLayout(0, 3));
+        add(addNameField());
+        add(addRegionField());
+        add(addEloField());
+        add(addBestChampField());
+        add(addAvergageGameLength());
     }
 
-    private void addEloField() {
+    private JPanel addAvergageGameLength() {
+        final JPanel avgGameLength = new JPanel();
+        final JLabel text = new JLabel("Durschnittliche Spieldauer");
+        final JLabel minutes = new JLabel(summoner.getAvgGameLength() + "min");
+        avgGameLength.add(text);
+        avgGameLength.add(minutes);
+        return avgGameLength;
+    }
+
+    private JPanel addBestChampField() {
+        final JPanel bestChampPanel = new JPanel();
+        final JLabel bestChampText = new JLabel("Best Champ");
+        bestChampPanel.add(bestChampText);
+        final String bestChampName = summoner.getBestChamp().getName();
+        try {
+            final BufferedImage myPicture = ImageIO.read(new File("files/champion/" + bestChampName + ".png"));
+            final JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+            picLabel.setVisible(true);
+            bestChampPanel.add(picLabel);
+        }
+        catch (IOException e) {
+            e.getStackTrace();
+        }
+        return bestChampPanel;
+    }
+
+    private JPanel addEloField() {
+        final JPanel eloPanel = new JPanel();
+        final JLabel eloText = new JLabel("Elo:" + summoner.getElo().toString() + summoner.getDivision() + " " + summoner.getLp() + "LP");
+        eloPanel.add(eloText);
         String elo = "";
         switch (summoner.getElo()) {
             case IRON:
@@ -55,23 +88,32 @@ public class EloPanel extends JPanel {
                 elo = "Challenger.jpg";
                 break;
         }
-        final ImageIcon eloIcon = new ImageIcon("files/" + elo);
-        final JLabel iconLabel = new JLabel(summoner.getLp() + "LP", eloIcon, SwingConstants.CENTER);
-        add(iconLabel);
-        iconLabel.setBounds(50, 250, 300, 300);
-        iconLabel.setVisible(true);
+        try {
+            final BufferedImage myPicture = ImageIO.read(new File("files/" + elo));
+            final JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+            picLabel.setVisible(true);
+            eloPanel.add(picLabel);
+            return eloPanel;
+        }
+        catch (IOException e) {
+            e.getStackTrace();
+        }
+        return null;
     }
 
-    private void addNameField() {
-        final JLabel nameLabel = new JLabel("Beschwörername:");
+    private JLabel addNameField() {
+        final JLabel nameLabel = new JLabel("Beschwörername: " + summoner.getName());
         nameLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
         nameLabel.setBounds(50, 130, 150, 50);
-        final JLabel summonerNameLabel = new JLabel(summoner.getName());
-        summonerNameLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
-        summonerNameLabel.setBounds(50, 150, 150, 50);
-        summonerNameLabel.setVisible(true);
         nameLabel.setVisible(true);
-        add(nameLabel);
-        add(summonerNameLabel);
+        return nameLabel;
+    }
+
+    private JLabel addRegionField() {
+        final JLabel regionLabel = new JLabel("Server: " + summoner.getRegion());
+        regionLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+        regionLabel.setBounds(50, 150, 150, 50);
+        regionLabel.setVisible(true);
+        return regionLabel;
     }
 }

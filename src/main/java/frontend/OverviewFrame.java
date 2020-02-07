@@ -1,25 +1,25 @@
 package frontend;
 
+import region.Region;
 import summoner.Summoner;
+import utils.CloseUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 
 public class OverviewFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private Summoner summoner;
+    private final Summoner summoner;
     private final AccountSelector accountSelector;
 
     private JPanel openedPanel;
-    private JCheckBoxMenuItem ranked;
-    private JCheckBoxMenuItem normal;
-    private JCheckBoxMenuItem aram;
+    private JCheckBoxMenuItem soloDuo;
+    private JCheckBoxMenuItem flex;
 
-    public OverviewFrame(AccountSelector accountSelector, String summonerName) {
+    public OverviewFrame(AccountSelector accountSelector, String summonerName, Region region) {
         this.accountSelector = accountSelector;
         accountSelector.setVisible(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -27,15 +27,11 @@ public class OverviewFrame extends JFrame {
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setLayout(null);
         addMenuItem();
-        try {
-            summoner = new Summoner("dsad", "DarkBlace", "EUW");
-            openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
-        }
-        catch (SQLException e) {
-            e.getStackTrace();
-        }
-//        summoner = loadSummoner(summonerName);
+        summoner = loadSummoner(summonerName, region);
+        openedPanel = new EloPanel(soloDuo.getState(), flex.getState(), summoner);
         OverviewFrame.this.add(openedPanel);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        CloseUtils.addCloseListener(this);
         openedPanel.setBounds(0, 0, getWidth(), getHeight());
         openedPanel.setVisible(true);
         setVisible(true);
@@ -48,8 +44,8 @@ public class OverviewFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 OverviewFrame.this.getContentPane().removeAll();
-                openedPanel = new ChampionPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
-                OverviewFrame.this.remove(openedPanel);
+                openedPanel = new ChampionPanel(soloDuo.getState(), flex.getState(), summoner);
+                OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
                 setVisible(false);
@@ -66,7 +62,7 @@ public class OverviewFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 OverviewFrame.this.getContentPane().removeAll();
-                openedPanel = new GamesPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+                openedPanel = new GamesPanel(soloDuo.getState(), flex.getState(), summoner);
                 OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
@@ -84,7 +80,7 @@ public class OverviewFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 OverviewFrame.this.getContentPane().removeAll();
-                openedPanel = new EloPanel(ranked.getState(), normal.getState(), aram.getState(), summoner);
+                openedPanel = new EloPanel(soloDuo.getState(), flex.getState(), summoner);
                 OverviewFrame.this.add(openedPanel);
                 openedPanel.setBounds(0, 0, OverviewFrame.this.getWidth(), OverviewFrame.this.getHeight());
                 openedPanel.setVisible(true);
@@ -114,12 +110,12 @@ public class OverviewFrame extends JFrame {
 
     private void addModeSelection(JMenuBar menuBar) {
         final JMenu gameSelection = new JMenu("Spielmodus");
-        ranked = new JCheckBoxMenuItem("Ranked Game");
-        normal = new JCheckBoxMenuItem("Normal Game");
-        aram = new JCheckBoxMenuItem("ARAM Game");
-        gameSelection.add(ranked);
-        gameSelection.add(normal);
-        gameSelection.add(aram);
+        final JMenu rankedSelection = new JMenu("Ranglisten");
+        soloDuo = new JCheckBoxMenuItem("Solo/ Duo");
+        flex = new JCheckBoxMenuItem("Flex 5 vs 5");
+        rankedSelection.add(soloDuo);
+        rankedSelection.add(flex);
+        gameSelection.add(rankedSelection);
         menuBar.add(gameSelection);
     }
 
@@ -158,7 +154,7 @@ public class OverviewFrame extends JFrame {
         menuBar.add(options);
     }
 
-    private Summoner loadSummoner(String summonerName) {
-        return null;
+    private Summoner loadSummoner(String summonerName, Region region) {
+        return accountSelector.getSummoners().findByNameAndRegion(summonerName, region);
     }
 }
