@@ -9,7 +9,7 @@ SET time_zone = "+00:00";
 
 CREATE DATABASE league_api;
 
-CREATE USER 'league_api'@'%' IDENTIFIED WITH mysql_native_password AS '***';
+CREATE USER 'league_api'@'%' IDENTIFIED BY 'deletedraven';
 
 GRANT USAGE ON *.* TO 'league_api'@'%' REQUIRE NONE WITH
     MAX_QUERIES_PER_HOUR 0
@@ -22,12 +22,12 @@ GRANT ALL PRIVILEGES ON `league_api`.* TO 'league_api'@'%';
 USE league_api;
 
 CREATE TABLE `ranking` (
-  `summonerid` char(64) NOT NULL,
-  `solotier` char(16) DEFAULT NULL,
-  `solorank` char(8) DEFAULT NULL,
+  `summonerid` varchar(64) NOT NULL UNIQUE,
+  `solotier` varchar(16) DEFAULT NULL,
+  `solorank` varchar(8) DEFAULT NULL,
   `sololp` int(4) DEFAULT NULL,
-  `flextier` char(16) DEFAULT NULL,
-  `flexrank` char(8) DEFAULT NULL,
+  `flextier` varchar(16) DEFAULT NULL,
+  `flexrank` varchar(8) DEFAULT NULL,
   `flexlp` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

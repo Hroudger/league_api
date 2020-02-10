@@ -3,7 +3,7 @@ from riotwatcher import RiotWatcher
 import mysql.connector as sql
 from mysql.connector import Error
 
-watcher = RiotWatcher("RGAPI-6d780c75-7cbb-4d6c-bd18-6ec53ee2a2e9")
+watcher = RiotWatcher("RGAPI-a15d5a32-06e3-475d-a59b-a2880f1ca49f")
 
 
 def connect(query, status):
@@ -16,7 +16,7 @@ def connect(query, status):
                            database='league_api',
                            user='league_api',
                            port=3306,
-                           password='')
+                           password='deletedraven')
 
         cursor = conn.cursor()
         cursor.execute(query)

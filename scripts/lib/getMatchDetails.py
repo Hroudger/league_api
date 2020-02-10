@@ -3,7 +3,7 @@ from riotwatcher import RiotWatcher
 import mysql.connector as sql
 from mysql.connector import Error
 
-watcher = RiotWatcher("RGAPI-6d780c75-7cbb-4d6c-bd18-6ec53ee2a2e9")
+watcher = RiotWatcher("RGAPI-a15d5a32-06e3-475d-a59b-a2880f1ca49f")
 
 
 def connect(query, status):
@@ -16,7 +16,7 @@ def connect(query, status):
                            database='league_api',
                            user='league_api',
                            port=3306,
-                           password='')
+                           password='deletedraven')
 
         cursor = conn.cursor()
         cursor.execute(query)
@@ -37,9 +37,9 @@ def connect(query, status):
     return records
 
 
-def getMatchDetails(matchId, accountID, region):
-    game = watcher.match.by_id(region, matchId)
-    query = 'SELECT championid FROM summonermatches WHERE matchid = "{}" AND summonerid = "{}"'.format(matchId,
+def getMatchDetails(matchID, accountID, region):
+    game = watcher.match.by_id(region, matchID)
+    query = 'SELECT championid FROM summonermatches WHERE matchid = "{}" AND summonerid = "{}"'.format(matchID,
                                                                                                        accountID)
     champion = connect(query, "select")
     champion = ' '.join([str(elem) for elem in champion])
@@ -60,7 +60,7 @@ def getMatchDetails(matchId, accountID, region):
                         x["stats"]["assists"], x["stats"]["champLevel"], x["stats"]["visionScore"], x["spell1Id"],
                         x["spell2Id"], x["stats"]["item0"], x["stats"]["item1"], x["stats"]["item2"],
                         x["stats"]["item3"], x["stats"]["item4"], x["stats"]["item5"], x["stats"]["item6"],
-                        matchId, accountID)
+                        matchID, accountID)
             connect(query, "insert")
 
         else:

@@ -3,7 +3,7 @@ from riotwatcher import RiotWatcher, ApiError
 import mysql.connector as sql
 from mysql.connector import Error
 
-watcher = RiotWatcher("RGAPI-6d780c75-7cbb-4d6c-bd18-6ec53ee2a2e9")
+watcher = RiotWatcher("RGAPI-a15d5a32-06e3-475d-a59b-a2880f1ca49f")
 
 
 def connect(query, status):
@@ -16,7 +16,7 @@ def connect(query, status):
                            database='league_api',
                            user='league_api',
                            port=3306,
-                           password='')
+                           password='deletedraven')
 
         cursor = conn.cursor()
         cursor.execute(query)
@@ -39,9 +39,6 @@ def connect(query, status):
 def getSummoner(region, name):
     try:
         summoner = watcher.summoner.by_name(region, name)
-        query = "INSERT IGNORE INTO summoners (id, REGION, NAME) VALUES ('{0}', '{1}', '{2}') ON DUPLICATE KEY UPDATE" \
-                " REGION='{1}', NAME='{2}'".format(summoner["accountId"], region, summoner["name"])
-        connect(query, "insert")
     except ApiError as err:
         if err.response.status_code == 429:
             sys.exit(1)
@@ -49,6 +46,9 @@ def getSummoner(region, name):
             sys.exit(2)
         else:
             raise
+    query = "INSERT IGNORE INTO summoners (id, REGION, NAME) VALUES ('{0}', '{1}', '{2}') ON DUPLICATE KEY UPDATE" \
+            " REGION='{1}', NAME='{2}'".format(summoner["accountId"], region, summoner["name"])
+    connect(query, "insert")
 
 
 getSummoner(sys.argv[1], sys.argv[2])
