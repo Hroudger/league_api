@@ -33,8 +33,14 @@ public class AccountSelector extends JFrame {
         summonerDefaultListModel = new DefaultListModel<>();
         this.summonersList = summonersList;
         final List<Summoner> summoners = summonersList.getSummonerList();
-        for (int i = 0; i < summoners.size(); i++) {
-            summonerDefaultListModel.insertElementAt(summoners.get(i), i);
+        for (Summoner summoner : summoners) {
+            final String region = "    ";
+            final StringBuilder sb = new StringBuilder(region);
+            final String regionUnprepared = summoner.getRegion().toString();
+            for (int i = 0; i < regionUnprepared.toCharArray().length; i++) {
+                sb.setCharAt(i, regionUnprepared.toCharArray()[i]);
+            }
+            summonerDefaultListModel.addElement(region + summoner.getName());
         }
         initalizeSelectionList();
         initalizeNameInput();
@@ -82,8 +88,7 @@ public class AccountSelector extends JFrame {
                     }
                     try {
                         Summoner.addSummoner(userNameInput.getText(), Objects.requireNonNull(regionSelection.getSelectedItem()).toString());
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                         openNewErrorWindow(name, (Region) Objects.requireNonNull(regionSelection.getSelectedItem()));
                     }
                     final String region = "    ";
@@ -116,7 +121,7 @@ public class AccountSelector extends JFrame {
                 if (summonerNameAndRegion == null) {
                     return;
                 }
-                final String summonerName = summonerNameAndRegion.substring(5);
+                final String summonerName = summonerNameAndRegion.substring(4);
                 final Region region;
                 switch (summonerNameAndRegion.substring(0, 5).trim()) {
                     case "NA":

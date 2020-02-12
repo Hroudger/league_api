@@ -1,14 +1,14 @@
 package champion;
 
 public class Champion {
-    private String name;
+    private String name = "Hugo";
     private KDA kda;
     private int championId;
-    private int amountGames;
-    private int percentGames;
-    private int winrate;
-    private int avgGameLength;
-    private float csMin;
+    private int amountGames = 1;
+    private int percentGames = 1;
+    private int winrate = 0;
+    private int avgGameLength = 3;
+    private float csMin = 1;
 
 
     public Champion(int championId) {

@@ -16,10 +16,10 @@ public class Summoner {
     private final Region region;
     private final List<Champion> championList = new ArrayList<>();
     private final Elo elo;
-    private final int division;
+    private final String division;
     private final int lp;
 
-    public Summoner(String id, String name, Region region, Elo elo, int division, int lp) throws SQLException {
+    public Summoner(String id, String name, Region region, Elo elo, String division, int lp) throws SQLException {
         this.id = id;
         this.name = name;
         this.region = region;
@@ -76,7 +76,7 @@ public class Summoner {
         return name;
     }
 
-    public int getDivision() {
+    public String getDivision() {
         return division;
     }
 

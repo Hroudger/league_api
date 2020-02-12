@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class EloPanel extends JPanel {
 
@@ -41,6 +42,11 @@ public class EloPanel extends JPanel {
         final JPanel bestChampPanel = new JPanel();
         final JLabel bestChampText = new JLabel("Best Champ");
         bestChampPanel.add(bestChampText);
+        try {
+            summoner.loadMatchHistory();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         final String bestChampName = summoner.getBestChampion().getName();
         try {
             final BufferedImage myPicture = ImageIO.read(new File("files/champion/" + bestChampName + ".png"));

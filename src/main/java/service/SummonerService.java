@@ -22,10 +22,10 @@ public class SummonerService {
             final String region = rs.getNString("region");
             final Region regionAsEnum;
             switch (region) {
-                case "EUW":
+                case "EUW1":
                     regionAsEnum = Region.EUW;
                     break;
-                case "NA":
+                case "NA1":
                     regionAsEnum = Region.NA;
                     break;
                 default:
@@ -64,7 +64,7 @@ public class SummonerService {
                 default:
                     throw new IllegalStateException("Unexpected value: " + elo);
             }
-            final int divison = rs.getInt("solotier");
+            final String divison = rs.getNString("solotier");
             final int lp = rs.getInt("sololp");
             final String summonerId = rs.getNString("id");
             return new Summoner(summonerId, name, regionAsEnum, eloAsEnum, divison, lp);
