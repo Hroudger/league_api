@@ -1,6 +1,7 @@
 package frontend;
 
 import region.Region;
+import summoner.Elo;
 import summoner.Summoner;
 import utils.CloseUtils;
 
@@ -20,7 +21,7 @@ public class OverviewFrame extends JFrame {
     private JCheckBoxMenuItem soloDuo;
     private JCheckBoxMenuItem flex;
 
-    public OverviewFrame(AccountSelector accountSelector, String summonerName, Region region) {
+    public OverviewFrame(AccountSelector accountSelector, String summonerName, Region region) throws SQLException {
         this.accountSelector = accountSelector;
         accountSelector.setVisible(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,7 +29,8 @@ public class OverviewFrame extends JFrame {
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setLayout(null);
         addMenuItem();
-        summoner = loadSummoner(summonerName, region);
+//        summoner = loadSummoner(summonerName, region);
+        summoner = new Summoner("name", "DarkBlace", Region.EUW, Elo.GOLD, "III", 57);
         openedPanel = new EloPanel(summoner);
         OverviewFrame.this.add(openedPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -178,7 +180,7 @@ public class OverviewFrame extends JFrame {
         options.add(end);
         menuBar.add(options);
     }
-
+/*
     private Summoner loadSummoner(String summonerName, Region region) {
         try {
             return accountSelector.getSummoners().getSummoner(summonerName, region);
@@ -188,4 +190,5 @@ public class OverviewFrame extends JFrame {
         }
         return null;
     }
+    */
 }

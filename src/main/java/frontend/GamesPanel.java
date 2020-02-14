@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Vector;
 
+import static java.lang.Math.floor;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class GamesPanel extends JPanel {
@@ -19,6 +20,8 @@ public class GamesPanel extends JPanel {
 
     public GamesPanel(Summoner summoner) {
         matchesList = summoner.getMatchList();
+        matchesList.add(new Match("2", summoner.getRegion().toString(), "name", 35, 2, 17, 1, 173, 2, 3, List.of(), new KDA(10, 3, 5), 440, 28));
+        matchesList.add(new Match("2", summoner.getRegion().toString(), "name", 35, 2, 17, 1, 173, 2, 3, List.of(), new KDA(10, 3, 5), 420, 28));
         setLayout(new BorderLayout());
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(100, 100, (int) screenSize.getWidth(), (int) screenSize.getHeight());
@@ -80,7 +83,7 @@ public class GamesPanel extends JPanel {
             final String kdaFormatted = kda.getKills() + " / " + kda.getDeaths() + " / " + kda.getAssists();
             content[6] = kdaFormatted;
             content[7] = match.getCs();
-            content[8] = match.getCsMin();
+            content[8] = floor(match.getCsMin());
             content[9] = match.getVisionScore();
             content[10] = match.getItems();
 

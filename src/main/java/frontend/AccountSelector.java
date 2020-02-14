@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,16 +33,6 @@ public class AccountSelector extends JFrame {
         panel.setBounds(0, 0, getWidth(), getHeight());
         summonerDefaultListModel = new DefaultListModel<>();
         this.summonersList = summonersList;
-        final List<Summoner> summoners = summonersList.getSummonerList();
-        for (Summoner summoner : summoners) {
-            final String region = "    ";
-            final StringBuilder sb = new StringBuilder(region);
-            final String regionUnprepared = summoner.getRegion().toString();
-            for (int i = 0; i < regionUnprepared.toCharArray().length; i++) {
-                sb.setCharAt(i, regionUnprepared.toCharArray()[i]);
-            }
-            summonerDefaultListModel.addElement(region + summoner.getName());
-        }
         initalizeSelectionList();
         initalizeNameInput();
         initalizeConfirmButton();
@@ -131,9 +122,14 @@ public class AccountSelector extends JFrame {
                         region = Region.EUW;
                         break;
                     default:
-                        region = Region.EUW;
+                        throw new IllegalStateException("Unexpected value: " + summonerNameAndRegion.substring(0, 5).trim());
                 }
-                new OverviewFrame(AccountSelector.this, summonerName, region);
+                try {
+                    new OverviewFrame(AccountSelector.this, summonerName, region);
+                }
+                catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             @Override
@@ -170,7 +166,7 @@ public class AccountSelector extends JFrame {
         errorWindow.setBounds(300, 300, 300, 300);
         final JLabel label = new JLabel(input + " ist kein existiertender Beschwörer für den Server:" + region.toString());
         errorWindow.add(label);
-        label.setBounds(100, 100, 200, 100);
+        label.setBounds(100, 100, 300, 100);
         label.setVisible(true);
         errorWindow.setVisible(true);
     }
@@ -211,6 +207,16 @@ public class AccountSelector extends JFrame {
         scrollPane.add(scrollPanel);
         scrollPane.setVisible(true);
         panel.add(scrollPane);
+        final List<Summoner> summoners = summonersList.getSummonerList();
+        for (Summoner summoner : summoners) {
+            final String region = "    ";
+            final StringBuilder sb = new StringBuilder(region);
+            final String regionUnprepared = summoner.getRegion().toString();
+            for (int i = 0; i < regionUnprepared.toCharArray().length; i++) {
+                sb.setCharAt(i, regionUnprepared.toCharArray()[i]);
+            }
+            summonerDefaultListModel.addElement(sb.toString() + summoner.getName());
+        }
     }
 
     public SummonerList getSummoners() {
