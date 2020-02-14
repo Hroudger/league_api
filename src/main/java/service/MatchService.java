@@ -31,15 +31,15 @@ public class MatchService {
         while (rs.next()) {
             String matchid = rs.getNString("matchid");
             String region = rs.getNString("region");
-            String summonerid = rs.getNString("id");
+            String summonerid = rs.getNString("summonerid");
             int championId = rs.getInt("championid");
-            int champLevel = rs.getInt("champlevel");
+            int champLevel = rs.getInt("level");
             int gameMode = rs.getInt("queueId");
             int win = rs.getInt("win");
             int cs = rs.getInt("cs");
             int spell1 = rs.getInt("spell1");
             int spell2 = rs.getInt("spell2");
-            int gameDuration = rs.getInt("gameDuration");
+            int gameDuration = rs.getInt("duration");
             int visionScore = rs.getInt("visionscore");
 
             List<Integer> itemList = new ArrayList<>();

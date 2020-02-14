@@ -1,7 +1,7 @@
 package champion;
 
 public class Champion {
-    private String name = "Hugo";
+    private String name = "Jhin";
     private KDA kda;
     private int championId;
     private int amountGames = 1;

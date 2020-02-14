@@ -37,7 +37,7 @@ public class MatchHistory {
     }
 
     public void loadHistory() throws SQLException {
-        if (summonerid != null || summonerid.equals("")) {
+        if (summonerid == null || summonerid.equals("")) {
             return;
         }
 

@@ -56,7 +56,7 @@ public class GamesPanel extends JPanel {
         gameOverviewTable.setRowHeight(20);
         for (final Match match : matchesList) {
             final Object[] content = new Object[11];
-            switch (match.getGameStatus()) {
+            switch (match.getGameMode()) {
                 case 420:
                     content[0] = "Ranked Solo/Duo";
                     break;
@@ -64,7 +64,7 @@ public class GamesPanel extends JPanel {
                     content[0] = "Flex 5 vs 5";
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + match.getGameStatus());
+                    throw new IllegalStateException("Unexpected value: " + match.getGameMode());
             }
             if (match.getGameStatus() == 1) {
                 content[1] = "Sieg";

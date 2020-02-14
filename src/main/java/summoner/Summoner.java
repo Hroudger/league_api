@@ -90,7 +90,7 @@ public class Summoner {
         for (Match match : matchList) {
             sum += match.getGameDuration();
         }
-        sum = sum / matchList.size();
+        sum = sum / matchList.size() / 3600;
         return sum;
     }
 

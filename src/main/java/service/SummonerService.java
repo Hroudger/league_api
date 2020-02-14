@@ -18,6 +18,7 @@ public class SummonerService {
         final ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
+            final String summonerId = rs.getNString("id");
             final String name = rs.getNString("name");
             final String region = rs.getNString("region");
             final Region regionAsEnum;
@@ -31,43 +32,49 @@ public class SummonerService {
                 default:
                     throw new IllegalStateException("Unexpected value: " + region);
             }
-            final String elo = rs.getNString("solorank");
-            final Elo eloAsEnum;
-            switch (elo) {
-                case "IRON":
-                    eloAsEnum = Elo.IRON;
-                    break;
-                case "BRONZE":
-                    eloAsEnum = Elo.BRONZE;
-                    break;
-                case "SILVER":
-                    eloAsEnum = Elo.SILVER;
-                    break;
-                case "GOLD":
-                    eloAsEnum = Elo.GOLD;
-                    break;
-                case "PLATIN":
-                    eloAsEnum = Elo.PLATIN;
-                    break;
-                case "DIAMOND":
-                    eloAsEnum = Elo.DIAMOND;
-                    break;
-                case "MASTER":
-                    eloAsEnum = Elo.MASTER;
-                    break;
-                case "GRANDMASTER":
-                    eloAsEnum = Elo.GRANDMASTER;
-                    break;
-                case "CHALLENGER":
-                    eloAsEnum = Elo.CHALLENGER;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + elo);
+
+            String sqlRanking = "SELECT * FROM ranking WHERE summonerid = ?;";
+            PreparedStatement stmtRank = DataBaseConnector.getPreparedStatement(sqlRanking, summonerId);
+            ResultSet rsRank = stmtRank.executeQuery();
+
+            while (rsRank.next()) {
+                final String elo = rsRank.getNString("solorank");
+                final Elo eloAsEnum;
+                switch (elo) {
+                    case "IRON":
+                        eloAsEnum = Elo.IRON;
+                        break;
+                    case "BRONZE":
+                        eloAsEnum = Elo.BRONZE;
+                        break;
+                    case "SILVER":
+                        eloAsEnum = Elo.SILVER;
+                        break;
+                    case "GOLD":
+                        eloAsEnum = Elo.GOLD;
+                        break;
+                    case "PLATIN":
+                        eloAsEnum = Elo.PLATIN;
+                        break;
+                    case "DIAMOND":
+                        eloAsEnum = Elo.DIAMOND;
+                        break;
+                    case "MASTER":
+                        eloAsEnum = Elo.MASTER;
+                        break;
+                    case "GRANDMASTER":
+                        eloAsEnum = Elo.GRANDMASTER;
+                        break;
+                    case "CHALLENGER":
+                        eloAsEnum = Elo.CHALLENGER;
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + elo);
+                }
+                final String divison = rsRank.getNString("solotier");
+                final int lp = rsRank.getInt("sololp");
+                return new Summoner(summonerId, name, regionAsEnum, eloAsEnum, divison, lp);
             }
-            final String divison = rs.getNString("solotier");
-            final int lp = rs.getInt("sololp");
-            final String summonerId = rs.getNString("id");
-            return new Summoner(summonerId, name, regionAsEnum, eloAsEnum, divison, lp);
         }
 
         return null;
